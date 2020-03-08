@@ -3,7 +3,7 @@
 # Created by panos on 12/24/19
 # IDE: PyCharm
 
-from mystique.ffmpeg.transcoding import (
+from mystique.video.transcoding import (
     probe_codex,
     mux2container,
     slice2segment,
@@ -13,9 +13,9 @@ from mystique.ffmpeg.transcoding import (
     select_p_frame_b4_i_frame,
 
 )
-from mystique.ffmpeg.resolution import resolution_generator
-from mystique.ffmpeg.h264 import level_generator
-from mystique.ffmpeg.sprite import generate as generate_sprite
+from mystique.video.resolution import resolution_generator
+from mystique.video.h264 import level_generator
+from mystique.video.sprite import generate as generate_sprite
 __all__ = [
     "probe_codex",
     "mux2container",

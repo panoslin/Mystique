@@ -4,16 +4,36 @@
 # IDE: PyCharm
 
 
-resolution = {
-    '240': {'width': 428, 'height': 240},
-    '360': {'width': 640, 'height': 360},
-    'sd': {'width': 848, 'height': 480},
-    'xga': {'width': 1024, 'height': 576},
-    'hd': {'width': 1280, 'height': 720},
-    'fullhd': {'width': 1920, 'height': 1080},
-    '2k': {'width': 2560, 'height': 1440},
-    '4k': {'width': 3840, 'height': 2160},
-    '5k': {'width': 5120, 'height': 2880},
-    '8k': {'width': 7680, 'height': 4320},
-    '8k+': {'width': 428, 'height': 240}
+server = {
+        "max_avaliable_transcoding_resolution": "4k"
 }
+
+resolution = {
+    ## resolution_tag: {width, height}
+    '240': {'long': 428, 'short': 240},
+    '360': {'long': 640, 'short': 360},
+    'sd': {'long': 848, 'short': 480},
+    'xga': {'long': 1024, 'short': 576},
+    'hd': {'long': 1280, 'short': 720},
+    'fullhd': {'long': 1920, 'short': 1080},
+    '2k': {'long': 2560, 'short': 1440},
+    '4k': {'long': 3840, 'short': 2160},
+    '5k': {'long': 5120, 'short': 2880},
+    '8k': {'long': 7680, 'short': 4320},
+    '8k+': {'long': 10240, 'short': 4320}
+}
+
+level2macroblocks_per_sec = {'1': 1485,
+                             '2': 11880,
+                             '2.1': 19800,
+                             '3': 40500,
+                             '3.1': 108000,
+                             # '4': 245760,
+                             '4.1': 245760,
+                             '5': 589824,
+                             '5.1': 983040,
+                             '5.2': 2073600,
+                             '6': 4177920,
+                             '6.1': 8355840,
+                             '6.2': 16711680
+                             }
