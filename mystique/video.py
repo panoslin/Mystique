@@ -11,6 +11,8 @@ import os
 import uuid
 from glob import glob
 import shutil
+import math
+from PIL import Image
 
 class Video:
     def __init__(self, video_path="mystique/video/example.mp4"):
@@ -293,6 +295,34 @@ class Video:
                 print(stderr)
 
         return True
+
+    @classmethod
+    def sprite(cls, icon_map_path, sprite_path="sprite.jpg"):
+        iconMap = sorted(glob(f"{icon_map_path}/*"), key=lambda x: int(x.split("-")[-1].split(".")[0]))
+        image_width, image_height = jmespath.search(
+            "streams[?codec_type=='video'].[width, height][0]",
+            ffmpeg.probe(iconMap[0])
+        )
+        total_count = len(iconMap)
+        if total_count >= 10:
+            master_width = image_width * 10
+            master_height = image_height * math.ceil(total_count / 10)
+        else:
+            master_width = image_width * total_count
+            master_height = image_height
+
+        master = Image.new(
+            mode='RGBA',
+            size=(master_width, master_height),
+            color=(0, 0, 0, 0))  # fully transparent
+
+        for count, filename in enumerate(iconMap):
+            image = Image.open(filename)
+            column = count % 10
+            row = count // 10
+
+            master.paste(image, (column * image_width, row * image_height))
+        master.convert('RGB').save(sprite_path, transparency=0)
 
 
 if __name__ == "__main__":
