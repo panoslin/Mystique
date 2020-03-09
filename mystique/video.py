@@ -304,6 +304,34 @@ class Video:
 
         return True
 
+    def select_frame_by_time_interval(self, output_dir="interval", interval=1):
+        """
+        output the p_frame before i_frame of a video
+        :param output_dir=None,
+        :param interval=1,
+        :return: stdout, stderr
+        """
+        ## ffmpeg -i vid.avi -f image2 -vf fps=fps=1 foo-%03d.jpeg
+        os.makedirs(output_dir, exist_ok=True)
+        process = (
+            ffmpeg
+                .input(
+                self.video_path,
+            )
+                .output(
+                f"{output_dir}/core-%08d.jpg",
+                vf=f"fps=fps={interval}",
+                f="image2",
+            )
+                .run_async(
+                pipe_stdout=True,
+                pipe_stderr=True,
+                overwrite_output=True
+            )
+        )
+        stdout, stderr = process.communicate()
+        return stdout.decode(), stderr.decode()
+
     @classmethod
     def sprite(cls, icon_map_path, sprite_path="sprite.jpg"):
         iconMap = sorted(glob(f"{icon_map_path}/*"), key=lambda x: int(x.split("-")[-1].split(".")[0]))
@@ -339,5 +367,9 @@ if __name__ == "__main__":
     # a = video.cal_max_resolution()
     # print(a)
 
-    for ele in video.generate_scale():
-        print(ele)
+    # for ele in video.generate_scale():
+    #     print(ele)
+
+    res = video.select_frame_by_time_interval()
+
+    print("breakpoint")
