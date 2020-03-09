@@ -17,9 +17,9 @@ from PIL import Image
 class Video:
     def __init__(self, video_path="mystique/video/example.mp4"):
         self.video_path = video_path
-        if not os.path.exists(video_path):
+        if not os.path.exists(self.video_path):
             raise FileNotFoundError
-        self.meta = ffmpeg.probe(filename=video_path)
+        self.meta = ffmpeg.probe(filename=self.video_path)
         self.video_meta = jmespath.search("streams[?codec_type=='video']", self.meta)[0]
         self.audio_meta = jmespath.search("streams[?codec_type=='audio']", self.meta)[0]
         self.width = int(self.video_meta['width'])
@@ -34,6 +34,11 @@ class Video:
 
     def __enter__(self):
         return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+        # print(f"exc_type, exc_val, exc_tb: {exc_type, exc_val, exc_tb}")
+
 
     def generate_level(self):
         for level, max_decoding_speed_in_macroblocks_per_sec in config.level2macroblocks_per_sec.items():
