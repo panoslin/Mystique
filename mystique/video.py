@@ -6,7 +6,7 @@
 import ffmpeg
 import jmespath
 from math import ceil
-import config
+from mystique import config
 import os
 import uuid
 from glob import glob
