@@ -32,6 +32,9 @@ class Video:
         self.main_side = self.cal_main_side()
         self.max_resolution = self.cal_max_resolution()
 
+    def __enter__(self):
+        return self
+
     def generate_level(self):
         for level, max_decoding_speed_in_macroblocks_per_sec in config.level2macroblocks_per_sec.items():
             if self.macroblocks_per_sec <= max_decoding_speed_in_macroblocks_per_sec:
