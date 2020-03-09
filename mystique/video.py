@@ -326,7 +326,7 @@ class Video:
 
 
 if __name__ == "__main__":
-    video = Video(video_path="video/example.mp4")
+    video = Video(video_path="example.mp4")
 
     # a = video.cal_max_resolution()
     # print(a)
