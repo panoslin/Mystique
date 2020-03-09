@@ -351,14 +351,18 @@ class Video:
             mode='RGBA',
             size=(master_width, master_height),
             color=(0, 0, 0, 0))  # fully transparent
-
+        max_column = 0
+        max_row = 0
         for count, filename in enumerate(iconMap):
             image = Image.open(filename)
             column = count % 10
+            max_column = column if column>max_column else max_column
             row = count // 10
+            max_row = row if row>max_row else row
 
             master.paste(image, (column * image_width, row * image_height))
         master.convert('RGB').save(sprite_path, transparency=0)
+        return total_count, max_column+1, max_row+1
 
 
 if __name__ == "__main__":
