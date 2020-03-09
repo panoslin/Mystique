@@ -3,4 +3,4 @@
 # Created by panos on 3/9/20
 # IDE: PyCharm
 
-from mystique.video import Video
+from Mystique.mystique.video import Video
