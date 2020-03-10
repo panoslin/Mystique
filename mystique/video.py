@@ -294,13 +294,13 @@ class Video:
                 pkt_pts_time = last_n_frame['pkt_pts_time']
                 stdout, stderr = process(f"{output_dir}/core-{count}.jpg", pkt_pts_time).communicate()
                 if stderr:
-                    print(stderr)
+                    pass
                 else:
                     count += 1
         else:
             stdout, stderr = process(f"{output_dir}/core-{count}.jpg", frames[-1]["pkt_pts_time"]).communicate()
             if stderr:
-                print(stderr)
+                pass
 
         return True
 
