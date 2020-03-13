@@ -14,6 +14,7 @@ import shutil
 import math
 from PIL import Image
 
+
 class Video:
     def __init__(self, video_path="mystique/video/example.mp4"):
         self.video_path = video_path
@@ -38,7 +39,6 @@ class Video:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
         # print(f"exc_type, exc_val, exc_tb: {exc_type, exc_val, exc_tb}")
-
 
     def generate_level(self):
         for level, max_decoding_speed_in_macroblocks_per_sec in config.level2macroblocks_per_sec.items():
@@ -194,6 +194,10 @@ class Video:
                 hls_list_size=0,
                 strftime_mkdir=1,
                 hls_segment_type='mpegts',
+                hls_playlist_type='vod',
+                force_key_frames='expr:gte(t,n_forced*2)', ## a key frame will be present every 2 seconds
+                r=self.fps, ## fixed frame rate
+                # g=self.fps * 2,  ## twice of fps, meaning that a key frame will be present every 2 seconds
                 c="copy",
                 format="hls",
             )
@@ -396,25 +400,25 @@ class Video:
         for count, filename in enumerate(iconMap):
             image = Image.open(filename)
             column = count % 10
-            max_column = column if column>max_column else max_column
+            max_column = column if column > max_column else max_column
             row = count // 10
-            max_row = row if row>max_row else row
+            max_row = row if row > max_row else row
 
             master.paste(image, (column * image_width, row * image_height))
         master.convert('RGB').save(sprite_path, transparency=0)
-        return total_count, max_column+1, max_row+1
+        return total_count, max_column + 1, max_row + 1
 
 
 if __name__ == "__main__":
-    # video = Video(video_path="example.mp4")
+# video = Video(video_path="example.mp4")
 
-    # a = video.cal_max_resolution()
-    # print(a)
+# a = video.cal_max_resolution()
+# print(a)
 
-    # for ele in video.generate_scale():
-    #     print(ele)
+# for ele in video.generate_scale():
+#     print(ele)
 
-    # res = video.select_frame_by_time_interval()
+# res = video.select_frame_by_time_interval()
 
     with Video(video_path="example.mp4") as video:
         # video.select_i_frame()
