@@ -185,7 +185,6 @@ class Video:
                 .output(
                 filename=segment_list,
                 hls_segment_filename=hls_segment_filename,
-                hls_flags="second_level_segment_index+iframes_only+independent_segments",
                 start_number=0,
                 loglevel="fatal",
                 hls_time=hls_time,
@@ -203,6 +202,7 @@ class Video:
                 sc_threshold=0,
                 c="copy",
                 format="hls",
+                hls_flags="second_level_segment_index+iframes_only+independent_segments",
             )
                 .run_async(
                 pipe_stdout=True,
@@ -412,7 +412,7 @@ class Video:
         return total_count, max_column + 1, max_row + 1
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 # video = Video(video_path="example.mp4")
 
 # a = video.cal_max_resolution()
@@ -422,12 +422,11 @@ if __name__ == "__main__":
 #     print(ele)
 
 # res = video.select_frame_by_time_interval()
-
-    with Video(video_path="example.mp4") as video:
-        # video.select_i_frame()
-        video.slice2hls(
-            hls_time=1,
-            segment_list="hls.m3u8",
-            hls_base_url='',
-            # hls_segment_filename='%%03d.ts',
-        )
+with Video(video_path="0121660864d311ea84fa00155d07b703.mp4") as video:
+    # video.select_i_frame()
+    video.slice2hls(
+        hls_time=5,
+        segment_list="hls.m3u8",
+        hls_base_url='http://media2.fideo.com.cn/fideo_video/hls/',
+        hls_segment_filename='%Y/%m/%d/0121660864d311ea84fa00155d07b703/%%d.ts',
+    )
