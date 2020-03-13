@@ -195,9 +195,11 @@ class Video:
                 strftime_mkdir=1,
                 hls_segment_type='mpegts',
                 hls_playlist_type='vod',
-                force_key_frames='expr:gte(t,n_forced*2)', ## a key frame will be present every 2 seconds
+                # force_key_frames='expr:gte(t,n_forced*2)', ## a key frame will be present every 2 seconds
                 r=self.fps, ## fixed frame rate
-                # g=self.fps * 2,  ## twice of fps, meaning that a key frame will be present every 2 seconds
+                g=self.fps * 2,  ## twice of fps, meaning that a key frame will be present every 2 seconds
+                keyint_min=self.fps * 2,  ## twice of fps, meaning that a key frame will be present every 2 seconds
+                sc_threshold=0,
                 c="copy",
                 format="hls",
             )
@@ -409,7 +411,7 @@ class Video:
         return total_count, max_column + 1, max_row + 1
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 # video = Video(video_path="example.mp4")
 
 # a = video.cal_max_resolution()
