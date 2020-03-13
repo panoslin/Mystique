@@ -185,7 +185,8 @@ class Video:
                 .output(
                 filename=segment_list,
                 hls_segment_filename=hls_segment_filename,
-                hls_flags="second_level_segment_index",
+                hls_flags="second_level_segment_index+iframes_only+independent_segments",
+                start_number=0,
                 loglevel="fatal",
                 hls_time=hls_time,
                 hls_allow_cache=1,
@@ -411,7 +412,7 @@ class Video:
         return total_count, max_column + 1, max_row + 1
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 # video = Video(video_path="example.mp4")
 
 # a = video.cal_max_resolution()
