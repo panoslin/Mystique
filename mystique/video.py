@@ -334,6 +334,7 @@ class Video:
                 .output(x, vframes="1", loglevel="fatal")
                 .run_async(pipe_stdout=True, pipe_stderr=True, overwrite_output=True)
         )
+        sequence_thumb = []
         for num, frame in enumerate(frames):
             pict_type = frame['pict_type']
             if num > 0 and pict_type == "I":
@@ -343,13 +344,16 @@ class Video:
                 if stderr:
                     pass
                 else:
+                    sequence_thumb.append({f"{output_dir}/core-{count}.jpg": pkt_pts_time})
                     count += 1
         else:
             stdout, stderr = process(f"{output_dir}/core-{count}.jpg", frames[-1]["pkt_pts_time"]).communicate()
             if stderr:
                 pass
+            else:
+                sequence_thumb.append({f"{output_dir}/core-{count}.jpg": frames[-1]["pkt_pts_time"]})
 
-        return True
+        return sequence_thumb
 
     def select_frame_by_time_interval(self, output_dir="interval", interval=1):
         """
@@ -422,11 +426,11 @@ class Video:
 #     print(ele)
 
 # res = video.select_frame_by_time_interval()
-with Video(video_path="0121660864d311ea84fa00155d07b703.mp4") as video:
+with Video(video_path="example.mp4") as video:
     # video.select_i_frame()
     video.slice2hls(
         hls_time=5,
         segment_list="hls.m3u8",
-        hls_base_url='http://media2.fideo.com.cn/fideo_video/hls/',
-        hls_segment_filename='%Y/%m/%d/0121660864d311ea84fa00155d07b703/%%d.ts',
+        hls_base_url='http://www.video.com/',
+        hls_segment_filename='%Y/%m/%d/example/%%d.ts',
     )
