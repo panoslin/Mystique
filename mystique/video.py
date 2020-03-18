@@ -427,10 +427,11 @@ class Video:
 
 # res = video.select_frame_by_time_interval()
 with Video(video_path="example.mp4") as video:
+    video.select_p_frame_b4_i_frame()
     # video.select_i_frame()
-    video.slice2hls(
-        hls_time=5,
-        segment_list="hls.m3u8",
-        hls_base_url='http://www.video.com/',
-        hls_segment_filename='%Y/%m/%d/example/%%d.ts',
-    )
+    # video.slice2hls(
+    #     hls_time=5,
+    #     segment_list="hls.m3u8",
+    #     hls_base_url='http://www.video.com/',
+    #     hls_segment_filename='%Y/%m/%d/example/%%d.ts',
+    # )
