@@ -196,7 +196,7 @@ class Video:
                 hls_segment_type='mpegts',
                 hls_playlist_type='vod',
                 # force_key_frames='expr:gte(t,n_forced*2)', ## a key frame will be present every 2 seconds
-                r=self.fps, ## fixed frame rate
+                r=self.fps,  ## fixed frame rate
                 g=self.fps * 2,  ## twice of fps, meaning that a key frame will be present every 2 seconds
                 keyint_min=self.fps * 2,  ## twice of fps, meaning that a key frame will be present every 2 seconds
                 sc_threshold=0,
@@ -344,14 +344,14 @@ class Video:
                 if stderr:
                     pass
                 else:
-                    sequence_thumb.append({f"{output_dir}/core-{count}.jpg": pkt_pts_time})
+                    sequence_thumb.append({"path": f"{output_dir}/core-{count}.jpg", "pts": pkt_pts_time})
                     count += 1
         else:
             stdout, stderr = process(f"{output_dir}/core-{count}.jpg", frames[-1]["pkt_pts_time"]).communicate()
             if stderr:
                 pass
             else:
-                sequence_thumb.append({f"{output_dir}/core-{count}.jpg": frames[-1]["pkt_pts_time"]})
+                sequence_thumb.append({"path": f"{output_dir}/core-{count}.jpg", "pts": frames[-1]["pkt_pts_time"]})
 
         return sequence_thumb
 
