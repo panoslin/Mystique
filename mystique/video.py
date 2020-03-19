@@ -416,7 +416,7 @@ class Video:
         return total_count, max_column + 1, max_row + 1
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 # video = Video(video_path="example.mp4")
 
 # a = video.cal_max_resolution()
@@ -426,8 +426,8 @@ class Video:
 #     print(ele)
 
 # res = video.select_frame_by_time_interval()
-with Video(video_path="example.mp4") as video:
-    video.select_p_frame_b4_i_frame()
+    with Video(video_path="example.mp4") as video:
+        video.select_p_frame_b4_i_frame()
     # video.select_i_frame()
     # video.slice2hls(
     #     hls_time=5,
