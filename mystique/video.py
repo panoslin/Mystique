@@ -171,7 +171,7 @@ class Video:
 
     def slice2hls(
             self,
-            hls_time=5,
+            hls_time=1,
             segment_list="hls.m3u8",
             hls_base_url="",
             hls_segment_filename='%Y/%m/%d/%%04d.ts',
@@ -182,17 +182,18 @@ class Video:
             .input(self.video_path) \
             .output(
             filename=segment_list,
+            # hide_banner="",
             hls_segment_filename=hls_segment_filename,
             start_number=0,
             hls_time=hls_time,
             hls_allow_cache=1,
             hls_base_url=hls_base_url,
-            # strftime=1,
+            # strftime=1,  ## new version arg. the same with use_localtime
             use_localtime=1,
-            # strftime_mkdir=1,
+            # strftime_mkdir=1,  ## new version arg. the same with use_localtime_mkdir
             use_localtime_mkdir=1,
-            hls_list_size=10,
-            hls_init_time=1,
+            # hls_list_size=10,  ## contradict to hls_playlist_type='vod'
+            # hls_init_time=1,  ## contradict to hls_playlist_type='vod'
             hls_segment_type='mpegts',
             hls_playlist_type='vod',
             # force_key_frames='expr:gte(t,n_forced)', ## a key frame will be present every 2 seconds
