@@ -178,32 +178,38 @@ class Video:
     ):
         ## ffmpeg -i example.mp4 -flags +cgop -g 30 -hls_time 5 -hls_list_size 0 -hls_allow_cache 1 -hls_base_url '' -strftime 1 -hls_segment_filename '%Y/%m/%d/%03d.ts' -strftime_mkdir 1 -hls_segment_type 'mpegts' out.m3u8
         ## ffmpeg -i example.mp4 -c copy -hls_allow_cache 1 -hls_flags second_level_segment_index -hls_segment_filename '%Y/%m/%d/%%04d.ts' -hls_segment_type "mpegts" -hls_time 10 -strftime_mkdir 1 -strftime 1 -hls_list_size 0 -f hls hls.m3u8
-        print("breakdown")
+        arguments = ffmpeg \
+            .input(self.video_path) \
+            .output(
+            filename=segment_list,
+            hls_segment_filename=hls_segment_filename,
+            start_number=0,
+            hls_time=hls_time,
+            hls_allow_cache=1,
+            hls_base_url=hls_base_url,
+            # strftime=1,
+            use_localtime=1,
+            # strftime_mkdir=1,
+            use_localtime_mkdir=1,
+            hls_list_size=10,
+            hls_init_time=1,
+            hls_segment_type='mpegts',
+            hls_playlist_type='vod',
+            # force_key_frames='expr:gte(t,n_forced)', ## a key frame will be present every 2 seconds
+            r=self.fps,  ## fixed frame rate
+            g=self.fps,  ## twice of fps, meaning that a key frame will be present every 2 seconds
+            keyint_min=self.fps,  ## twice of fps, meaning that a key frame will be present every 2 seconds
+            sc_threshold=0,
+            # c="copy",
+            format="hls",
+            hls_flags="second_level_segment_index+independent_segments",
+            loglevel="fatal",
+            flags="+cgop",
+        )
+        statement = arguments.compile()
+        print(" ".join(statement))
         process = (
-            ffmpeg
-                .input(self.video_path)
-                .output(
-                filename=segment_list,
-                hls_segment_filename=hls_segment_filename,
-                start_number=0,
-                loglevel="fatal",
-                hls_time=hls_time,
-                hls_allow_cache=1,
-                hls_base_url=hls_base_url,
-                strftime=1,
-                hls_list_size=0,
-                strftime_mkdir=1,
-                hls_segment_type='mpegts',
-                hls_playlist_type='vod',
-                # force_key_frames='expr:gte(t,n_forced*2)', ## a key frame will be present every 2 seconds
-                r=self.fps,  ## fixed frame rate
-                g=self.fps * 2,  ## twice of fps, meaning that a key frame will be present every 2 seconds
-                keyint_min=self.fps * 2,  ## twice of fps, meaning that a key frame will be present every 2 seconds
-                sc_threshold=0,
-                c="copy",
-                format="hls",
-                hls_flags="second_level_segment_index+iframes_only+independent_segments",
-            )
+            arguments
                 .run_async(
                 pipe_stdout=True,
                 pipe_stderr=True,
@@ -417,21 +423,21 @@ class Video:
 
 
 if __name__ == "__main__":
-# video = Video(video_path="example.mp4")
+    # video = Video(video_path="example.mp4")
 
-# a = video.cal_max_resolution()
-# print(a)
+    # a = video.cal_max_resolution()
+    # print(a)
 
-# for ele in video.generate_scale():
-#     print(ele)
+    # for ele in video.generate_scale():
+    #     print(ele)
 
-# res = video.select_frame_by_time_interval()
+    # res = video.select_frame_by_time_interval()
     with Video(video_path="example.mp4") as video:
-        video.select_p_frame_b4_i_frame()
-    # video.select_i_frame()
-    # video.slice2hls(
-    #     hls_time=5,
-    #     segment_list="hls.m3u8",
-    #     hls_base_url='http://www.video.com/',
-    #     hls_segment_filename='%Y/%m/%d/example/%%d.ts',
-    # )
+        # video.select_p_frame_b4_i_frame()
+        # video.select_i_frame()
+        video.slice2hls(
+            hls_time=10,
+            segment_list="hls.m3u8",
+            # hls_base_url='http://www.video.com/',
+            hls_segment_filename='%Y/%m/%d/example/%%d.ts',
+        )

@@ -1,0 +1,9 @@
+#EXTM3U
+#EXT-X-STREAM-INF:BANDWIDTH=622000,AVERAGE-BANDWIDTH=622000
+http://media2.fideo.com.cn/fideo_video/hls/hls_240_single_file.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=2350000,AVERAGE-BANDWIDTH=2350000
+http://media2.fideo.com.cn/fideo_video/hls/hls_sd_single_file.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=3321000,AVERAGE-BANDWIDTH=3321000
+http://media2.fideo.com.cn/fideo_video/hls/hls_xga_single_file.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=9518000,AVERAGE-BANDWIDTH=9518000
+http://media2.fideo.com.cn/fideo_video/hls/hls_fullhd_single_file.m3u8
