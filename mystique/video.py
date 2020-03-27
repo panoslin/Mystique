@@ -335,32 +335,33 @@ class Video:
             select_streams="v",
             show_entries="frame=pkt_pts_time,pict_type")["frames"]
         count = 1
-        process = lambda x, ss: (
-            ffmpeg
-                .input(self.video_path, ss=ss)
-                .output(x, vframes="1", loglevel="fatal")
-                .run_async(pipe_stdout=True, pipe_stderr=True, overwrite_output=True)
-        )
-        sequence_thumb = []
+        sequence_thumb = [{"path": f"{output_dir}/core-{count}.jpg", "pts": 0}]
+        frame_num_list = [{"frame":0, "count":count}]
         for num, frame in enumerate(frames):
             pict_type = frame['pict_type']
             if num > 0 and pict_type == "I":
+                count += 1
+                frame_num_list.append({"frame":num - n, "count": count})
                 last_n_frame = frames[num - n]
                 pkt_pts_time = last_n_frame['pkt_pts_time']
-                stdout, stderr = process(f"{output_dir}/core-{count}.jpg", pkt_pts_time).communicate()
-                if stderr:
-                    pass
-                else:
-                    sequence_thumb.append({"path": f"{output_dir}/core-{count}.jpg", "pts": pkt_pts_time})
-                    count += 1
+                sequence_thumb.append({"path": f"{output_dir}/core-{count}.jpg", "pts": pkt_pts_time})
         else:
-            stdout, stderr = process(f"{output_dir}/core-{count}.jpg", frames[-1]["pkt_pts_time"]).communicate()
-            if stderr:
-                pass
-            else:
-                sequence_thumb.append({"path": f"{output_dir}/core-{count}.jpg", "pts": frames[-1]["pkt_pts_time"]})
-
-        return sequence_thumb
+            count += 1
+            frame_num_list.append({"frame": len(frames) - 1, "count": count})
+            sequence_thumb.append({"path": f"{output_dir}/core-{count}.jpg", "pts": frames[-1]["pkt_pts_time"]})
+            statement = "+".join(list(map(lambda x: f"eq(n\,{x['frame']})", frame_num_list)))
+            stdout, stderr = (
+                ffmpeg
+                    .input(self.video_path)
+                    .output(
+                    f"{output_dir}/core-%d.jpg",
+                    vf=f"select='{statement}'",
+                    vsync=0,
+                    loglevel="fatal",
+                )
+                    .run_async(pipe_stdout=True, pipe_stderr=True, overwrite_output=True)
+            ).communicate()
+        return sequence_thumb, stdout, stderr
 
     def select_frame_by_time_interval(self, output_dir="interval", interval=1):
         """
@@ -434,11 +435,11 @@ if __name__ == "__main__":
 
     # res = video.select_frame_by_time_interval()
     with Video(video_path="example.mp4") as video:
-        # video.select_p_frame_b4_i_frame()
+        video.select_p_frame_b4_i_frame()
         # video.select_i_frame()
-        video.slice2hls(
-            hls_time=10,
-            segment_list="hls.m3u8",
-            # hls_base_url='http://www.video.com/',
-            hls_segment_filename='%Y/%m/%d/example/%%d.ts',
-        )
+        # video.slice2hls(
+        #     hls_time=10,
+        #     segment_list="hls.m3u8",
+        #     # hls_base_url='http://www.video.com/',
+        #     hls_segment_filename='%Y/%m/%d/example/%%d.ts',
+        # )
