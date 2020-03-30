@@ -320,20 +320,25 @@ class Video:
         stdout, stderr = process.communicate()
         return stdout.decode(), stderr.decode()
 
-    def select_p_frame_b4_i_frame(self, output_dir="pframe", n=1):
+    def select_p_frame_b4_i_frame(self, output_dir="pframe", n=1, frames=None):
         """
         output the p_frame before i_frame of a video
         :param output_dir=None,
         :param n: select the last n frame before i-frame
+        :param frames: ffmpeg.probe(
+                                self.video_path,
+                                select_streams="v",
+                                show_entries="frame=pkt_pts_time,pict_type")["frames"]
         :return: stdout, stderr
         """
         ## ffprobe -i example.mp4 -v quiet -select_streams v -show_entries frame=pkt_pts_time,pict_type
         ## ffmpeg -ss 1.835167 -i example.mp4 -vframes 1 0.jpg
         os.makedirs(output_dir, exist_ok=True)
-        frames = ffmpeg.probe(
-            self.video_path,
-            select_streams="v",
-            show_entries="frame=pkt_pts_time,pict_type")["frames"]
+        if not frames:
+            frames = ffmpeg.probe(
+                self.video_path,
+                select_streams="v",
+                show_entries="frame=pkt_pts_time,pict_type")["frames"]
         count = 1
         sequence_thumb = [{"path": f"{output_dir}/core-{count}.jpg", "pts": 0}]
         frame_num_list = [{"frame":0, "count":count}]
@@ -434,7 +439,7 @@ if __name__ == "__main__":
     #     print(ele)
 
     # res = video.select_frame_by_time_interval()
-    with Video(video_path="example.mp4") as video:
+    with Video(video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/9314_ae48df44fc1011e5b85735b171edd6cc.f0.mov") as video:
         video.select_p_frame_b4_i_frame()
         # video.select_i_frame()
         # video.slice2hls(
