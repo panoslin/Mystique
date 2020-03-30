@@ -366,7 +366,6 @@ class Video:
                 )
                     .run_async(pipe_stdout=True, pipe_stderr=True, overwrite_output=True)
             ).communicate()
-        print(time.time())
         return sequence_thumb, stdout, stderr
 
     def select_frame_by_time_interval(self, output_dir="interval", interval=1):
@@ -441,10 +440,8 @@ if __name__ == "__main__":
 
     # res = video.select_frame_by_time_interval()
     import time
-    print(time.time())
     with Video(video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/9314_0f089c263d9c11e698fb3f45ac975125.f0.mp4") as video:
         video.select_p_frame_b4_i_frame()
-        print(time.time())
         # video.select_i_frame()
         # video.slice2hls(
         #     hls_time=10,
