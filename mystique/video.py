@@ -344,7 +344,7 @@ class Video:
         frame_num_list = [{"frame":0, "count":count}]
         for num, frame in enumerate(frames):
             pict_type = frame['pict_type']
-            if num > 0 and pict_type == "I":
+            if num > 1 and pict_type == "I":
                 count += 1
                 frame_num_list.append({"frame":num - n, "count": count})
                 last_n_frame = frames[num - n]
@@ -366,6 +366,7 @@ class Video:
                 )
                     .run_async(pipe_stdout=True, pipe_stderr=True, overwrite_output=True)
             ).communicate()
+        print(time.time())
         return sequence_thumb, stdout, stderr
 
     def select_frame_by_time_interval(self, output_dir="interval", interval=1):
@@ -439,8 +440,11 @@ if __name__ == "__main__":
     #     print(ele)
 
     # res = video.select_frame_by_time_interval()
-    with Video(video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/9314_ae48df44fc1011e5b85735b171edd6cc.f0.mov") as video:
+    import time
+    print(time.time())
+    with Video(video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/9314_0f089c263d9c11e698fb3f45ac975125.f0.mp4") as video:
         video.select_p_frame_b4_i_frame()
+        print(time.time())
         # video.select_i_frame()
         # video.slice2hls(
         #     hls_time=10,
