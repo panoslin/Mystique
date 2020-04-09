@@ -25,7 +25,13 @@ class Video:
         self.audio_meta = jmespath.search("streams[?codec_type=='audio']", self.meta)[0]
         self.width = int(self.video_meta['width'])
         self.height = int(self.video_meta['height'])
-        self.bit_rate = int(self.video_meta['bit_rate'])
+        try:  ##  in Mbps or Mb/s
+            self.bit_rate = float(self.video_meta['bit_rate']) / 1024
+        except KeyError:
+            self.bit_rate = (
+                                    float(os.path.getsize(video_path) * 8) / float(self.video_meta['duration']) -
+                                    float(self.audio_meta['bit_rate'])
+                            ) / 1024
         self.avg_frame_rate = self.fps = eval(self.video_meta['avg_frame_rate'])
         self.macroblocks_per_sec = ceil(self.width / 16.0) * ceil(self.height / 16.0) * self.avg_frame_rate
         self.level = self.generate_level()
@@ -341,12 +347,12 @@ class Video:
                 show_entries="frame=pkt_pts_time,pict_type")["frames"]
         count = 1
         sequence_thumb = [{"path": f"{output_dir}/core-{count}.jpg", "pts": 0}]
-        frame_num_list = [{"frame":0, "count":count}]
+        frame_num_list = [{"frame": 0, "count": count}]
         for num, frame in enumerate(frames):
             pict_type = frame['pict_type']
             if num > 1 and pict_type == "I":
                 count += 1
-                frame_num_list.append({"frame":num - n, "count": count})
+                frame_num_list.append({"frame": num - n, "count": count})
                 last_n_frame = frames[num - n]
                 pkt_pts_time = last_n_frame['pkt_pts_time']
                 sequence_thumb.append({"path": f"{output_dir}/core-{count}.jpg", "pts": pkt_pts_time})
@@ -440,7 +446,9 @@ if __name__ == "__main__":
 
     # res = video.select_frame_by_time_interval()
     import time
-    with Video(video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/9314_0f089c263d9c11e698fb3f45ac975125.f0.mp4") as video:
+
+    with Video(
+            video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/9314_0f089c263d9c11e698fb3f45ac975125.f0.mp4") as video:
         video.select_p_frame_b4_i_frame()
         # video.select_i_frame()
         # video.slice2hls(
