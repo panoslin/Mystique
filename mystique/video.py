@@ -25,7 +25,7 @@ class Video:
         self.audio_meta = jmespath.search("streams[?codec_type=='audio']", self.meta)[0]
         self.width = int(self.video_meta['width'])
         self.height = int(self.video_meta['height'])
-        try:  ##  in Mbps or Mb/s
+        try:  ##  in Mbps or Mb/s(mege bits per sec)
             self.bit_rate = float(self.video_meta['bit_rate']) / 1024
         except KeyError:
             self.bit_rate = (
@@ -392,6 +392,7 @@ class Video:
                 f"{output_dir}/core-%08d.jpg",
                 vf=f"fps=fps={interval}",
                 f="image2",
+                loglevel="fatal",
             )
                 .run_async(
                 pipe_stdout=True,
