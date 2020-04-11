@@ -28,7 +28,7 @@ class Video:
         try:  ##  in Mbps or Mb/s(mege bits per sec)
             self.bit_rate = float(self.video_meta['bit_rate']) / 1024
         except KeyError:
-            self.bit_rate = float(self.meta['format']['bit_rate'] / 1024)
+            self.bit_rate = float(self.meta['format']['bit_rate']) / 1024
             # self.bit_rate = (
             #                         float(os.path.getsize(video_path) * 8) / float(self.video_meta['duration']) -
             #                         float(self.audio_meta['bit_rate'])
