@@ -25,6 +25,10 @@ class Video:
         self.audio_meta = jmespath.search("streams[?codec_type=='audio']", self.meta)[0]
         self.width = int(self.video_meta['width'])
         self.height = int(self.video_meta['height'])
+        try:
+            self.duration = float(self.video_meta['duration'])
+        except:
+            self.duration = float(self.meta['format']['duration'])
         try:  ##  in Mbps or Mb/s(mege bits per sec)
             self.bit_rate = float(self.video_meta['bit_rate']) / 1024
         except KeyError:
