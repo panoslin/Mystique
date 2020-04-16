@@ -22,7 +22,10 @@ class Video:
             raise FileNotFoundError
         self.meta = ffmpeg.probe(filename=self.video_path)
         self.video_meta = jmespath.search("streams[?codec_type=='video']", self.meta)[0]
-        self.audio_meta = jmespath.search("streams[?codec_type=='audio']", self.meta)[0]
+        try:
+            self.audio_meta = jmespath.search("streams[?codec_type=='audio']", self.meta)[0]
+        except IndexError:
+            self.audio_meta = None
         self.width = int(self.video_meta['width'])
         self.height = int(self.video_meta['height'])
         try:
@@ -454,7 +457,7 @@ if __name__ == "__main__":
     import time
 
     with Video(
-            video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/9314_0f089c263d9c11e698fb3f45ac975125.f0.mp4") as video:
+            video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/c66810aa-318d-41d3-aaf4-2787f387308e.mp4") as video:
         video.select_p_frame_b4_i_frame()
         # video.select_i_frame()
         # video.slice2hls(
