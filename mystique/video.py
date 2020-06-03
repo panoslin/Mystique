@@ -94,7 +94,7 @@ class Video:
         min_priority = tag2priority[self.max_resolution]
         for resolution_tag, resolution in config.resolution.items():
             priority = tag2priority[resolution_tag]
-            if priority > min_priority:
+            if priority >= min_priority:
                 if config.server["max_avaliable_transcoding_resolution"]:
                     if priority <= tag2priority[config.server["max_avaliable_transcoding_resolution"]]:
                         continue  ## the upper limit of the server
