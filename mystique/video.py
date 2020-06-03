@@ -259,6 +259,7 @@ class Video:
                 level=level,
                 acodec="aac",
                 movflags="faststart",  ## mv the metadata of the video to the head of the container
+                max_muxing_queue_size="1024",  ## prevent Too many packets buffered for output stream
             )
                 .run_async(
                 pipe_stdout=True,
