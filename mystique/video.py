@@ -369,7 +369,14 @@ class Video:
             count += 1
             frame_num_list.append({"frame": len(frames) - 1, "count": count})
             sequence_thumb.append({"path": f"{output_dir}/core-{count}.jpg", "pts": frames[-1]["pkt_pts_time"]})
-            statement = "+".join(list(map(lambda x: f"eq(n\,{x['frame']})", frame_num_list)))
+            statement = "+".join(
+                list(
+                    map(
+                        lambda x: f"eq(n\,0)",
+                        frame_num_list
+                    )
+                )
+            )
             stdout, stderr = (
                 ffmpeg
                     .input(self.video_path)
