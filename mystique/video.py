@@ -419,6 +419,37 @@ class Video:
         stdout, stderr = process.communicate()
         return stdout.decode(), stderr.decode()
 
+    def select_frame_by_scene(self, output_dir="scene", detection_score=0.3):
+        """
+        select frame by scene changes
+        :param output_dir=None,
+        :param detection_score,
+        :return: stdout, stderr
+        """
+        ## ffmpeg -i test.mp4 -vf "select='gt(scene,0.3)'"  -vsync vfr -qscale:v 2 -f image2 core-%08d.jpg
+        os.makedirs(output_dir, exist_ok=True)
+        process = (
+            ffmpeg
+                .input(
+                self.video_path,
+            )
+                .output(
+                f"{output_dir}/core-%08d.jpg",
+                vf=f"select='gt(scene,{detection_score})'",
+                vsync="vfr",
+                qscale="2",
+                # loglevel="fatal",
+                f="image2",
+            )
+                .run_async(
+                pipe_stdout=True,
+                pipe_stderr=True,
+                overwrite_output=True
+            )
+        )
+        stdout, stderr = process.communicate()
+        return stdout.decode(), stderr.decode()
+
     @classmethod
     def sprite(cls, icon_map_path, sprite_path="sprite.jpg"):
         iconMap = sorted(glob(f"{icon_map_path}/*"), key=lambda x: int(x.split("-")[-1].split(".")[0]))
@@ -465,8 +496,8 @@ if __name__ == "__main__":
     import time
 
     with Video(
-            video_path="/media/wuyanzu/DATA/PycharmProjects/tvcbook_mystique/c66810aa-318d-41d3-aaf4-2787f387308e.mp4") as video:
-        video.select_p_frame_b4_i_frame()
+            video_path="test.mp4") as video:
+        video.select_frame_by_scene()
         # video.select_i_frame()
         # video.slice2hls(
         #     hls_time=10,
