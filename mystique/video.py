@@ -438,7 +438,7 @@ class Video:
                 vf=f"select='gt(scene,{detection_score})'",
                 vsync="vfr",
                 qscale="2",
-                # loglevel="fatal",
+                loglevel="fatal",
                 f="image2",
             )
                 .run_async(
