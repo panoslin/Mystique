@@ -448,6 +448,17 @@ class Video:
             )
         )
         stdout, stderr = process.communicate()
+        if 'Output file is empty' in stderr.decode():
+            detection_score_altered = (detection_score - 0.1) if detection_score > 0.11 else 0.01
+            if detection_score_altered == detection_score:
+                print("No frame are selected cause NO scene changes")
+                return stdout.decode(), stderr.decode()
+            print(f"No frame are selected cause detection_score is too large: {detection_score}\n"
+                  f"Will re-run with lower score: {detection_score_altered}")
+            return self.select_frame_by_scene(
+                output_dir=output_dir,
+                detection_score=detection_score_altered
+            )
         return stdout.decode(), stderr.decode()
 
     @classmethod
