@@ -493,6 +493,71 @@ class Video:
         master.convert('RGB').save(sprite_path, transparency=0)
         return total_count, max_column + 1, max_row + 1
 
+    def crop_video(
+            self,
+            output_file,
+            start_at=0,
+            duration=0,
+            point_a=None,
+            point_b=None,
+            scale='-2:-2',
+            vcodec="libx264",
+    ):
+        """
+        decoding/encoding the input_file to output_file with the specific arguments
+        :param start_at:
+        :param duration:
+        :param point_a: coordinate of left-top point
+        :param point_b: coordinate of right-bottom point
+        :param scale: target resolution in the format of "-2:720".
+                      negative number representing this side will be adjusted according the other side
+        :param output_file: output file path
+        :param vcodec: "libx264"/"libx265" or other video codec.
+                       your ffmpeg should have compiled with the specific codec
+        :return:
+        """
+        ##  ffmpeg -y -ss 220 -t 15 -i in.mp4 out.mp4
+        ##  ffmpeg -i a.mov -strict -2 -vf crop=1080:1080:0:420 out.mp4
+        kwargs = dict()
+        if duration:
+            kwargs = {
+                **kwargs,
+                **{
+                    "ss": start_at,
+                    "t": duration,
+                }
+            }
+        if all([point_a, point_b]):
+            x1, y1 = point_a
+            x2, y2 = point_b
+            width = abs(x2 - x1)
+            height = abs(y2 - y1)
+            kwargs = {
+                **kwargs,
+                **{
+                    "vf": f"scale={scale},crop={width}:{height}:{x1}:{y1}",
+                }
+            }
+        process = (
+            ffmpeg
+                .input(self.video_path)
+                .output(
+                filename=output_file,
+                vcodec=vcodec,
+                acodec="aac",
+                movflags="faststart",  ## mv the metadata of the video to the head of the container
+                max_muxing_queue_size="1024",  ## prevent Too many packets buffered for output stream,
+                **kwargs
+            )
+                .run_async(
+                pipe_stdout=True,
+                pipe_stderr=True,
+                overwrite_output=True
+            )
+        )
+        stdout, stderr = process.communicate()
+        return stdout.decode(), stderr.decode()
+
 
 if __name__ == "__main__":
     # video = Video(video_path="example.mp4")
@@ -508,7 +573,14 @@ if __name__ == "__main__":
 
     with Video(
             video_path="test.mp4") as video:
-        video.select_frame_by_scene()
+        video.crop_video(
+            start_at=0,
+            duration=2,
+            # point_a=(478, 185),
+            # point_a=(0, 0),
+            # point_b=(478, 848),
+            output_file='out.mp4',
+        )
         # video.select_i_frame()
         # video.slice2hls(
         #     hls_time=10,
