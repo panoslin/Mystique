@@ -545,6 +545,7 @@ class Video:
                 filename=output_file,
                 vcodec=vcodec,
                 acodec="aac",
+                loglevel="fatal",
                 movflags="faststart",  ## mv the metadata of the video to the head of the container
                 max_muxing_queue_size="1024",  ## prevent Too many packets buffered for output stream,
                 **kwargs
