@@ -559,6 +559,26 @@ class Video:
         stdout, stderr = process.communicate()
         return stdout.decode(), stderr.decode()
 
+    def self_defined_command(
+            self,
+            **kwargs
+
+    ):
+        process = (
+            ffmpeg
+                .input(self.video_path)
+                .output(
+                **kwargs
+            )
+                .run_async(
+                pipe_stdout=True,
+                pipe_stderr=True,
+                overwrite_output=True
+            )
+        )
+        stdout, stderr = process.communicate()
+        return stdout.decode(), stderr.decode()
+
 
 if __name__ == "__main__":
     # video = Video(video_path="example.mp4")
@@ -574,13 +594,19 @@ if __name__ == "__main__":
 
     with Video(
             video_path="test.mp4") as video:
-        video.crop_video(
-            start_at=0,
-            duration=2,
-            # point_a=(478, 185),
-            # point_a=(0, 0),
-            # point_b=(478, 848),
-            output_file='out.mp4',
+        # video.crop_video(
+        #     start_at=0,
+        #     duration=2,
+        #     # point_a=(478, 185),
+        #     # point_a=(0, 0),
+        #     # point_b=(478, 848),
+        #     output_file='out.mp4',
+        # )
+        video.self_defined_command(
+            ss=0,
+            vframes=1,
+            format="image2",
+            filename='out.jpg',
         )
         # video.select_i_frame()
         # video.slice2hls(
