@@ -279,16 +279,20 @@ class Video:
         :param remove: remove the origin files or not.
         :return: stdout, stderr
         """
+        if isinstance(input_file, (list, tuple)):
+            input_file = "concat:" + "|".join(input_file)
+            kwargs = {}
+        else:
+            kwargs = {} if "concat:" in input_file else {"format": 'concat', "safe": 0}
         process = (
             ffmpeg
                 .input(
                 input_file,
-                format='concat',
-                safe=0
+                **kwargs
             )
                 .output(
                 output_file,  ## 'full.mp4'
-                loglevel="fatal",
+                # loglevel="fatal",
                 c='copy',
             )
                 .run_async(
@@ -593,7 +597,7 @@ if __name__ == "__main__":
     import time
 
     with Video(
-            video_path="test.mp4") as video:
+            video_path="b43910df3bf2433e9d985d8ae17a60f5.mp4") as video:
         # video.crop_video(
         #     start_at=0,
         #     duration=2,
@@ -602,16 +606,23 @@ if __name__ == "__main__":
         #     # point_b=(478, 848),
         #     output_file='out.mp4',
         # )
-        video.self_defined_command(
-            ss=0,
-            vframes=1,
-            format="image2",
-            filename='out.jpg',
-        )
+        # video.self_defined_command(
+        #     ss=0,
+        #     vframes=1,
+        #     format="image2",
+        #     filename='out.jpg',
+        # )
         # video.select_i_frame()
         # video.slice2hls(
         #     hls_time=10,
-        #     segment_list="hls.m3u8",
+        #     segment_list="",
         #     # hls_base_url='http://www.video.com/',
         #     hls_segment_filename='%Y/%m/%d/example/%%d.ts',
         # )
+        video.concat(
+            [
+                "mystique/2020/09/10/example/0.ts",
+                "mystique/2020/09/10/example/1.ts",
+                "mystique/2020/09/10/example/2.ts",
+            ]
+        )
