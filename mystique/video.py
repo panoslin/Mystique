@@ -279,7 +279,7 @@ class Video:
         :param remove: remove the origin files or not.
         :return: stdout, stderr
         """
-        if isinstance(input_file, (list, tuple)):
+        if isinstance(input_file, (list, tuple, set)):
             input_file = "concat:" + "|".join(input_file)
             kwargs = {}
         else:
