@@ -292,7 +292,7 @@ class Video:
             )
                 .output(
                 output_file,  ## 'full.mp4'
-                # loglevel="fatal",
+                loglevel="fatal",
                 c='copy',
             )
                 .run_async(
