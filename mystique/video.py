@@ -257,6 +257,7 @@ class Video:
                 vcodec=vcodec,
                 # vprofile=vprofile,  ## reference to the table in /mystique/ffmpeg/h264-vprofile-table.png
                 level=level,
+                safe=0,
                 acodec="aac",
                 movflags="faststart",  ## mv the metadata of the video to the head of the container
                 max_muxing_queue_size="1024",  ## prevent Too many packets buffered for output stream
