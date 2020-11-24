@@ -32,7 +32,7 @@ class Video:
             self.duration = float(self.video_meta['duration'])
         except:
             self.duration = float(self.meta['format']['duration'])
-        try:  ##  in Mbps or Mb/s(mege bits per sec)
+        try:  ##  in Mbps or Mb/s(mega bits per sec)
             self.bit_rate = float(self.video_meta['bit_rate']) / 1024
         except KeyError:
             self.bit_rate = float(self.meta['format']['bit_rate']) / 1024
